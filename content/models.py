@@ -1,16 +1,15 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
 
 class Genres(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique='name', max_length=50)
+    slug = models.SlugField(unique=True, max_length=50)
 
 
 class Categories(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique='name', max_length=50)
+    slug = models.SlugField(unique=True, max_length=50)
 
 class Titles(models.Model):
     name = models.CharField(max_length=200)
