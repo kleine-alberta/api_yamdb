@@ -1,21 +1,19 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 
 
 class Genres(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=50)
+    slug = models.SlugField(unique=True, max_length=50, blank=True, null=True)
 
 
 class Categories(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=50)
+    slug = models.SlugField(unique=True, max_length=50, blank=True, null=True)
 
 class Titles(models.Model):
     name = models.CharField(max_length=200)
-    year = models.DateField("year published", auto_now_add=True)
-    rating = models.PositiveSmallIntegerField
-    description = models.TextField(blank=True, null=True)
-    genre = models.ForeignKey(Genres, on_delete=models.SET_NULL, blank=True, null=True, related_name="titles")
-    category = models.ForeignKey(Categories, on_delete=models.SET_NULL, blank=True, null=True, related_name="titles")
-
+    year = models.IntegerField(null=True)
+    rating = models.PositiveSmallIntegerField(blank=True, null=True)
+    description = models.TextField(blank=True)
+    genre = models.ManyToManyField(Genres, blank=True)
+    category = models.ForeignKey(Categories, on_delete=models.SET_NULL, blank=True, null=True, related_name="category")
