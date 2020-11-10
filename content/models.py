@@ -11,7 +11,7 @@ class Categories(models.Model):
     slug = models.SlugField(unique=True, max_length=50, blank=True, null=True)
 
 class Titles(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True)
     year = models.IntegerField(null=True)
     rating = models.PositiveSmallIntegerField(blank=True, null=True)
     description = models.TextField(blank=True)
