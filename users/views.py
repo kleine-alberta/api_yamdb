@@ -1,13 +1,14 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
-from rest_framework.decorators import api_view
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action, api_view
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import User
-from .permissions import IsAdminOrMe
+from .permissions import IsAdmin
 from .serializers import (
     ConfirmationCodeSerializer, UserEmailSerializer, UserSerializer
 )
@@ -71,6 +72,28 @@ def get_jwt_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminOrMe]
-    model = User
-    serializer = UserSerializer
+    lookup_field = 'username'
+    
+    permission_classes = [IsAdmin | IsAdminUser]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ('user__username',)
+
+    @action(
+        methods=['patch', 'get'],
+        permission_classes=[IsAuthenticated],
+        detail=False,
+        url_path='me',
+        url_name='me'
+    )
+    def me(self, request, *args, **kwargs):
+        user = self.request.user
+        serializer = self.get_serializer(user)
+        if self.request.method == 'PATCH':
+            serializer = self.get_serializer(
+                user,
+                data=request.data,
+                partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        return Response(serializer.data)
