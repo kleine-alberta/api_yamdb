@@ -1,17 +1,15 @@
-from django.shortcuts import render
-from rest_framework import permissions, viewsets, filters
-from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser
-from rest_framework import viewsets
-from rest_framework import mixins
-
-from .models import Titles, Genres, Categories
 from django.contrib.auth import get_user_model
-from .serializers import GenreSerializer, CategoriesSerializer,  TitlesSerializerGet, TitlesSerializer
-from django.shortcuts import get_object_or_404
-from .permissions import IsOwnerOrReadOnly, IsSuperuserPermission
+from django.shortcuts import get_object_or_404, render
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, mixins, permissions, viewsets
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+
 from .filters import TitleFilter
+from .models import Categories, Genres, Titles
+from .permissions import IsOwnerOrReadOnly, IsSuperuserPermission
+from .serializers import (CategoriesSerializer, GenreSerializer,
+                          TitlesSerializer, TitlesSerializerGet)
 
 User = get_user_model()
 

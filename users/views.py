@@ -9,9 +9,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import User
 from .permissions import IsAdmin
-from .serializers import (
-    ConfirmationCodeSerializer, UserEmailSerializer, UserSerializer
-)
+from .serializers import (ConfirmationCodeSerializer, UserEmailSerializer,
+                          UserSerializer)
 
 
 @api_view(['POST'])
