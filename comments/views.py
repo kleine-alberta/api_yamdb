@@ -16,13 +16,10 @@ class ReviewsViewSet(viewsets.ModelViewSet):
       
     def get_queryset(self):
         title = get_object_or_404(Titles, id=self.kwargs['title_id'])
-        return title.reviews.all()
-        
+        return title.reviews.all()  
 
     def perform_create(self, serializers):
         title = get_object_or_404(Titles, id=self.kwargs['title_id'])
-        if Reviews.objects.filter(author=self.request.user, title=title):
-            raise serializers.validate_title("Нельзя оставлять больше одного отзыва!")
         serializers.save(author=self.request.user, title=title)
 
 

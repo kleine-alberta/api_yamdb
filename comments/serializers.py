@@ -11,8 +11,14 @@ User = get_user_model()
 class ReviewsSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(read_only=True, slug_field='username')
 
-    def validate_title(self, value):
-        raise serializers.ValidationError(value)
+    
+    def validate(self, data):
+        author = self.context.get('request').user
+        title_id = self.context.get('view').kwargs['title_id']
+        method = self.context.get('request').method
+        if Reviews.objects.filter(author=author, title=title_id) and method == "POST":
+            raise serializers.ValidationError('Нельзя оставлять больше одного отзыва!')
+        return data
 
     class Meta:
         fields = ['id', 'text', 'author', 'score', 'pub_date']
