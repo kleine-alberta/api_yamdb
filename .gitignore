@@ -1,6 +1,11 @@
 .git/*
 env/
 venv/
+.vscode
+.vscode/
+.venv
+.venv/
+data/
 
 __pycache__/
 *.py[cod]
