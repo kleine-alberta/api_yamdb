@@ -56,7 +56,7 @@ class CategoriesViewSet(mixins.CreateModelMixin,
 
 class TitlesViewSet(viewsets.ModelViewSet):
     queryset = Titles.objects.all() 
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    #permission_classes = (permissions.IsAdminUser, )
     filter_backends = [DjangoFilterBackend] 
     filterset_class = TitleFilter
 
@@ -66,3 +66,10 @@ class TitlesViewSet(viewsets.ModelViewSet):
             return TitlesSerializerGet
         else:
             return TitlesSerializer
+
+    def get_permissions(self):
+        if (self.request.method != 'GET'):
+            permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
