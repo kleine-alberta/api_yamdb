@@ -18,9 +18,9 @@ class GenresViewSet(mixins.CreateModelMixin,
                     mixins.DestroyModelMixin,
                     mixins.ListModelMixin,
                     viewsets.GenericViewSet):
-    queryset = Genres.objects.all() 
+    queryset = Genres.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = [filters.SearchFilter] 
+    filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     lookup_field = 'slug'
     http_method_names = ['get', 'post', 'delete']
@@ -30,16 +30,16 @@ class GenresViewSet(mixins.CreateModelMixin,
             permission_classes = [permissions.IsAdminUser]
         else:
             permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes]        
+        return [permission() for permission in permission_classes]
 
 
 class CategoriesViewSet(mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         mixins.ListModelMixin,
                         viewsets.GenericViewSet):
-    queryset = Categories.objects.all() 
+    queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-    filter_backends = [filters.SearchFilter] 
+    filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     http_method_names = ['get', 'post', 'delete']
     lookup_field = 'slug'
@@ -49,14 +49,13 @@ class CategoriesViewSet(mixins.CreateModelMixin,
             permission_classes = [permissions.IsAdminUser]
         else:
             permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes] 
+        return [permission() for permission in permission_classes]
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
     queryset = Titles.objects.all()
-    filter_backends = [DjangoFilterBackend] 
+    filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
-
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

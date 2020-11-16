@@ -19,7 +19,7 @@ class CategoriesSerializer(serializers.ModelSerializer):
 
 
 class TitlesSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(slug_field='slug', 
+    category = serializers.SlugRelatedField(slug_field='slug',
                                             queryset=Categories.objects.all())
     genre = serializers.SlugRelatedField(slug_field='slug',
                                          queryset=Genres.objects.all(),
@@ -36,13 +36,13 @@ class TitlesSerializerGet(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
 
     def get_rating(self, value):
-        queryset = Titles.objects.annotate(rating=Avg('reviews__score')) 
-        rating = queryset.get(id=value.id).rating 
-        if not rating: 
-            return None 
+        queryset = Titles.objects.annotate(rating=Avg('reviews__score'))
+        rating = queryset.get(id=value.id).rating
+        if not rating:
+            return None
         return round(rating, 1)
 
-
     class Meta:
-        fields = ['id', 'name', 'year', 'description', 'genre', 'category', 'rating']
+        fields = ['id', 'name', 'year', 'description',
+                  'genre', 'category', 'rating']
         model = Titles
