@@ -55,8 +55,7 @@ class CategoriesViewSet(mixins.CreateModelMixin,
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
-    queryset = Titles.objects.all() 
-    #permission_classes = (permissions.IsAdminUser, )
+    queryset = Titles.objects.all()
     filter_backends = [DjangoFilterBackend] 
     filterset_class = TitleFilter
 
