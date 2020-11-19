@@ -1,33 +1,33 @@
 from django.db.models import Avg
 from rest_framework import serializers
 
-from .models import Categories, Genres, Titles
+from .models import Category, Genre, Title
 
 
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         exclude = ['id']
-        model = Genres
+        model = Genre
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
 
     class Meta:
         exclude = ['id']
-        model = Categories
+        model = Category
 
 
 class TitlesSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='slug',
-                                            queryset=Categories.objects.all())
+                                            queryset=Category.objects.all())
     genre = serializers.SlugRelatedField(slug_field='slug',
-                                         queryset=Genres.objects.all(),
+                                         queryset=Genre.objects.all(),
                                          many=True)
 
     class Meta:
         fields = '__all__'
-        model = Titles
+        model = Title
 
 
 class TitlesSerializerGet(serializers.ModelSerializer):
@@ -37,4 +37,4 @@ class TitlesSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
-        model = Titles
+        model = Title

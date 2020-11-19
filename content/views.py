@@ -3,7 +3,7 @@ from rest_framework import filters, mixins, permissions, viewsets
 from django.db.models import Avg
 
 from .filters import TitleFilter
-from .models import Categories, Genres, Titles
+from .models import Category, Genre, Title
 from .permissions import IsAdminOrReadOnly
 from .serializers import (CategoriesSerializer, GenreSerializer,
                           TitlesSerializer, TitlesSerializerGet)
@@ -17,7 +17,7 @@ class MixinView(mixins.CreateModelMixin,
 
 
 class GenresViewSet(MixinView):
-    queryset = Genres.objects.all()
+    queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
@@ -27,7 +27,7 @@ class GenresViewSet(MixinView):
 
 
 class CategoriesViewSet(MixinView):
-    queryset = Categories.objects.all()
+    queryset = Category.objects.all()
     serializer_class = CategoriesSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
@@ -37,7 +37,7 @@ class CategoriesViewSet(MixinView):
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
-    queryset = Titles.objects.annotate(rating=Avg('reviews__score'))
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
     permission_classes = [IsAdminOrReadOnly, ]

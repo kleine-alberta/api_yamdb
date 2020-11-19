@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator
 
 
-class Genres(models.Model):
+class Genre(models.Model):
     name = models.CharField(max_length=200,
                             db_index=True,
                             verbose_name="genres")
@@ -20,7 +20,7 @@ class Genres(models.Model):
         verbose_name_plural = 'Genres'
 
 
-class Categories(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=200,
                             db_index=True,
                             verbose_name="categories")
@@ -37,7 +37,7 @@ class Categories(models.Model):
             verbose_name_plural = 'Categories'
 
 
-class Titles(models.Model):
+class Title(models.Model):
     def current_year():
         return datetime.date.today().year
 
@@ -48,8 +48,8 @@ class Titles(models.Model):
                                null=True,
                                db_index=True)
     description = models.TextField(blank=True)
-    genre = models.ManyToManyField(Genres, blank=True)
-    category = models.ForeignKey(Categories,
+    genre = models.ManyToManyField(Genre, blank=True)
+    category = models.ForeignKey(Category,
                                  on_delete=models.SET_NULL,
                                  blank=True,
                                  null=True,
