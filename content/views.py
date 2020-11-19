@@ -1,71 +1,49 @@
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, viewsets
-from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
+from django.db.models import Avg
 
 from .filters import TitleFilter
 from .models import Categories, Genres, Titles
-from .permissions import IsOwnerOrReadOnly, IsSuperuserPermission
+from .permissions import IsAdminOrReadOnly
 from .serializers import (CategoriesSerializer, GenreSerializer,
                           TitlesSerializer, TitlesSerializerGet)
 
-User = get_user_model()
+
+class MixinView(mixins.CreateModelMixin,
+                mixins.DestroyModelMixin,
+                mixins.ListModelMixin,
+                viewsets.GenericViewSet):
+    pass
 
 
-class GenresViewSet(mixins.CreateModelMixin,
-                    mixins.DestroyModelMixin,
-                    mixins.ListModelMixin,
-                    viewsets.GenericViewSet):
+class GenresViewSet(MixinView):
     queryset = Genres.objects.all()
     serializer_class = GenreSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     lookup_field = 'slug'
     http_method_names = ['get', 'post', 'delete']
-
-    def get_permissions(self):
-        if (self.request.method != 'GET'):
-            permission_classes = [permissions.IsAdminUser]
-        else:
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes]
+    permission_classes = [IsAdminOrReadOnly, ]
 
 
-class CategoriesViewSet(mixins.CreateModelMixin,
-                        mixins.DestroyModelMixin,
-                        mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
+class CategoriesViewSet(MixinView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     http_method_names = ['get', 'post', 'delete']
     lookup_field = 'slug'
-
-    def get_permissions(self):
-        if (self.request.method != 'GET'):
-            permission_classes = [permissions.IsAdminUser]
-        else:
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes]
+    permission_classes = [IsAdminOrReadOnly, ]
 
 
 class TitlesViewSet(viewsets.ModelViewSet):
-    queryset = Titles.objects.all()
+    queryset = Titles.objects.annotate(rating=Avg('reviews__score'))
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
+    permission_classes = [IsAdminOrReadOnly, ]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return TitlesSerializerGet
         else:
             return TitlesSerializer
-
-    def get_permissions(self):
-        if (self.request.method != 'GET'):
-            permission_classes = [permissions.IsAdminUser]
-        else:
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        return [permission() for permission in permission_classes]

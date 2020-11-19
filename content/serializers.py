@@ -7,14 +7,14 @@ from .models import Categories, Genres, Titles
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['name', 'slug']
+        exclude = ['id']
         model = Genres
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ['name', 'slug']
+        exclude = ['id']
         model = Categories
 
 
@@ -26,23 +26,15 @@ class TitlesSerializer(serializers.ModelSerializer):
                                          many=True)
 
     class Meta:
-        fields = "__all__"
+        fields = '__all__'
         model = Titles
 
 
 class TitlesSerializerGet(serializers.ModelSerializer):
     category = CategoriesSerializer()
     genre = GenreSerializer(many=True)
-    rating = serializers.SerializerMethodField()
-
-    def get_rating(self, value):
-        queryset = Titles.objects.annotate(rating=Avg('reviews__score'))
-        rating = queryset.get(id=value.id).rating
-        if not rating:
-            return None
-        return round(rating, 1)
+    rating = serializers.IntegerField()
 
     class Meta:
-        fields = ['id', 'name', 'year', 'description',
-                  'genre', 'category', 'rating']
+        fields = '__all__'
         model = Titles
