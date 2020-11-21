@@ -20,4 +20,4 @@ __pycache__/
 
 media/
 
-db1.sqlite3
+db.sqlite3
