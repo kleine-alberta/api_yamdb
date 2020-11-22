@@ -5,7 +5,6 @@ venv/
 .vscode/
 .venv
 .venv/
-data/
 
 __pycache__/
 *.py[cod]
