@@ -1,6 +1,7 @@
-import datetime
-from django.db import models
 from django.core.validators import MaxValueValidator
+from django.db import models
+
+from .utils import current_year
 
 
 class Genre(models.Model):
@@ -16,8 +17,8 @@ class Genre(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Genre'
         verbose_name_plural = 'Genres'
+        verbose_name = 'Genre'
 
 
 class Category(models.Model):
@@ -32,15 +33,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-        class Meta:
-            verbose_name = 'Category'
-            verbose_name_plural = 'Categories'
+    class Meta:
+        verbose_name_plural = 'Categories'
+        verbose_name = 'Category'
 
 
 class Title(models.Model):
-    def current_year():
-        return datetime.date.today().year
-
     name = models.CharField(max_length=200,
                             blank=True,
                             verbose_name="titles")
@@ -59,5 +57,5 @@ class Title(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Title'
         verbose_name_plural = 'Titles'
+        verbose_name = 'Title'

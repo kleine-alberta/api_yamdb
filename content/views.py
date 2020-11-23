@@ -1,12 +1,12 @@
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, viewsets
-from django.db.models import Avg
 
 from .filters import TitleFilter
 from .models import Category, Genre, Title
 from .permissions import IsAdminOrReadOnly
-from .serializers import (CategoriesSerializer, GenreSerializer,
-                          TitlesSerializer, TitlesSerializerGet)
+from .serializers import (CategorySerializer, GenreSerializer,
+                          TitleSerializer, TitleSerializerGet)
 
 
 class MixinView(mixins.CreateModelMixin,
@@ -16,7 +16,7 @@ class MixinView(mixins.CreateModelMixin,
     pass
 
 
-class GenresViewSet(MixinView):
+class GenreViewSet(MixinView):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = [filters.SearchFilter]
@@ -26,9 +26,9 @@ class GenresViewSet(MixinView):
     permission_classes = [IsAdminOrReadOnly, ]
 
 
-class CategoriesViewSet(MixinView):
+class CategoryViewSet(MixinView):
     queryset = Category.objects.all()
-    serializer_class = CategoriesSerializer
+    serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['=name']
     http_method_names = ['get', 'post', 'delete']
@@ -36,7 +36,7 @@ class CategoriesViewSet(MixinView):
     permission_classes = [IsAdminOrReadOnly, ]
 
 
-class TitlesViewSet(viewsets.ModelViewSet):
+class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
@@ -44,6 +44,6 @@ class TitlesViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return TitlesSerializerGet
+            return TitleSerializerGet
         else:
-            return TitlesSerializer
+            return TitleSerializer

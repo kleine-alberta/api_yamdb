@@ -11,14 +11,14 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
 
 
-class CategoriesSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         exclude = ['id']
         model = Category
 
 
-class TitlesSerializer(serializers.ModelSerializer):
+class TitleSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='slug',
                                             queryset=Category.objects.all())
     genre = serializers.SlugRelatedField(slug_field='slug',
@@ -30,8 +30,8 @@ class TitlesSerializer(serializers.ModelSerializer):
         model = Title
 
 
-class TitlesSerializerGet(serializers.ModelSerializer):
-    category = CategoriesSerializer()
+class TitleSerializerGet(serializers.ModelSerializer):
+    category = CategorySerializer()
     genre = GenreSerializer(many=True)
     rating = serializers.IntegerField()
 

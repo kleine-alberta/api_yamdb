@@ -5,13 +5,13 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 
 from comments.views import CommentsViewSet, ReviewsViewSet
 
-from .views import CategoriesViewSet, GenresViewSet, TitlesViewSet
+from .views import CategoryViewSet, GenreViewSet, TitleViewSet
 
 router = DefaultRouter()
 
-router.register('genres', GenresViewSet)
-router.register('categories', CategoriesViewSet)
-router.register('titles', TitlesViewSet)
+router.register('genres', GenreViewSet)
+router.register('categories', CategoryViewSet)
+router.register('titles', TitleViewSet)
 router.register('titles/(?P<title_id>\d+)/reviews', ReviewsViewSet, basename='reviews')
 router.register('titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments', CommentsViewSet, basename='comments')
 
