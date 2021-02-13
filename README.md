@@ -1,4 +1,5 @@
 
+
 <div align="center">
   <img width=200" height="67" src="https://i.ibb.co/Gp361Rp/YAMDB.jpg">
 </div>
@@ -93,7 +94,103 @@
 ```
 /api/v1/follow/ (GET, POST)
 ```
-    
+
+## Использование
+
+1) Устанавливаем [Docker](https://docs.docker.com/engine/install/)
+
+2) Собираем `docker-compose` в detach mode (background):
+```shell
+docker-compose up -d --build
+```
+
+3) Собираем статические файлы в `STATIC_ROOT`:
+```shell
+docker-compose exec web python3 manage.py collectstatic --noinput
+```
+<details>
+<summary>STDOUT</summary>
+```
+163 static files copied to '/usr/src/web/static'.
+```
+</details>
+
+4) Запускаем миграции:
+```shell
+docker-compose exec web python3 manage.py migrate --noinput
+```
+<details>
+<summary>STDOUT</summary>
+```
+Operations to perform:
+  Apply all migrations: admin, auth, comments, content, contenttypes, sessions, users
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying users.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying content.0001_initial... OK
+  Applying content.0002_auto_20201119_1626... OK
+  Applying content.0003_auto_20201119_1629... OK
+  Applying content.0004_auto_20201119_1712... OK
+  Applying content.0005_auto_20201119_1719... OK
+  Applying content.0006_auto_20201119_1720... OK
+  Applying comments.0001_initial... OK
+  Applying comments.0002_reviews_title... OK
+  Applying comments.0003_auto_20201114_2342... OK
+  Applying comments.0004_auto_20201115_0124... OK
+  Applying comments.0005_auto_20201115_1214... OK
+  Applying content.0007_auto_20201119_1752... OK
+  Applying comments.0006_auto_20201121_1730... OK
+  Applying comments.0007_auto_20201121_1746... OK
+  Applying comments.0008_auto_20201121_2128... OK
+  Applying content.0008_auto_20201123_1330... OK
+  Applying content.0009_auto_20210207_1135... OK
+  Applying sessions.0001_initial... OK
+  Applying users.0002_auto_20210207_1843... OK
+  Applying users.0003_auto_20210207_1848... OK
+```
+</details>
+
+
+4) Наполняем `Postgres` данными:
+```shell
+docker-compose exec web python3 manage.py loaddata fixture.json
+```
+<details>
+<summary>STDOUT</summary>
+```
+Installed 194 object(s) from 1 fixture(s)
+```
+</details>
+
+
+5) Создаем суперпользователя Django:
+```shell
+docker-compose run web python manage.py createsuperuser
+```
+<details>
+<summary>STDOUT</summary>
+```
+Username:
+Email address:
+Password: 
+Password (again):
+Superuser created successfully.
+</details>
 
 ## Технологии
 - [Python](https://www.python.org/)
